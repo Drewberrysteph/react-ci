@@ -1,19 +1,36 @@
 version: 2.1
 
-workflows:
-  test-deploy:
-    jobs:
-      - test
-
 jobs:
   test:
     docker:
       - image: cimg/node:20.2.0
     steps:
       - checkout
-      - run: 
+      - run:
           name: Install dependencies
           command: npm install
       - run:
           name: Run test
           command: npm run test
+  nversion:
+    docker:
+      - image: cimg/node:20.2.0
+    steps:
+      - checkout
+      - run: node --version
+
+workflows:
+  test:
+    jobs:
+      - test
+  schedule-workflow:
+    triggers:
+      - schedule:
+          cron: "* * * 1 *"
+          filters:
+            branches:
+              only:
+                - main
+    jobs:
+      - test
+      - nversion
