@@ -12,6 +12,12 @@ jobs:
       - run:
           name: Run test
           command: npm run test
+  ntest:
+    docker:
+      - image: cimg/node:20.2.0
+    steps:
+      - checkout
+      - run: node --version
   nversion:
     docker:
       - image: cimg/node:20.2.0
@@ -23,6 +29,9 @@ workflows:
   test:
     jobs:
       - test
+  ntest:
+    jobs:
+      - ntest
   schedule-workflow:
     triggers:
       - schedule:
